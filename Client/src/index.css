@@ -7,3 +7,7 @@
     box-sizing: border-box;
   }
 }
+
+.base-wrapper {
+  @apply h-5/6 bg-gray-100/85 rounded-3xl;
+}
