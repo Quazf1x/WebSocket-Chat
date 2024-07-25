@@ -9,6 +9,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.get("/", (req, res) => res.send(messages));
+app.post("/", (req, res) => console.log("got it"));
 
 const PORT = 3000;
 

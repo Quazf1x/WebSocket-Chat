@@ -13,10 +13,7 @@ const LogIn = ({ onLogIn }: LogInType) => {
           required
           className="h-24 w-full mt-4 p-2 text-4xl outline-violet-500 border-b-4 border-b-violet-500 rounded-tr-lg rounded-tl-lg"
         />
-        <button
-          className="max-w-52 mt-7 align-bottom self-end font-semibold bg-violet-500 p-3 rounded-2xl text-white w-full text-xl transition-all hover:opacity-90 active:scale-95"
-          type="submit"
-        >
+        <button className="max-w-52 mt-7 align-bottom self-end font-semibold bg-violet-500 p-3 rounded-2xl text-white w-full text-xl transition-all hover:opacity-90 active:scale-95">
           Log In
         </button>
       </form>

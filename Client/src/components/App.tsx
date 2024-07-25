@@ -3,11 +3,12 @@ import Board from "./Board.tsx";
 import { useState } from "react";
 
 const App = () => {
-  const [isLogIn, setLogIn] = useState(true);
+  const [username, setUsername] = useState<null | string>(null);
 
   const onLogIn = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLogIn(true);
+    const target = e.currentTarget;
+    const inputValue = (target[0] as HTMLInputElement).value;
+    setUsername(inputValue);
   };
 
   return (
@@ -16,7 +17,7 @@ const App = () => {
     animate-gradbg bg-gradient-to-tr from-violet-500 via-rose-300 to-orange-300
     flex justify-center items-center"
     >
-      {isLogIn ? <Board /> : <LogIn onLogIn={onLogIn} />}
+      {username ? <Board username={username} /> : <LogIn onLogIn={onLogIn} />}
     </main>
   );
 };
