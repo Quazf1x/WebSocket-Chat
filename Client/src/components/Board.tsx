@@ -38,10 +38,15 @@ const Board = ({ username }: BoardType) => {
           <></>
         )}
       </div>
-      <form method="POST" action="/" className="flex items-center">
-        <input id="username" value={username} hidden />
+      <form
+        method="POST"
+        action="http://localhost:3000"
+        className="flex items-center"
+      >
+        <input id="username" name="username" value={username} readOnly hidden />
         <textarea
           id="user-message"
+          name="userMessage"
           placeholder="Type here..."
           className="w-11/12 h-16 mt-4 p-2 text-lg bg-white/30 shadow-md rounded-md resize-none focus:outline-white/25"
         />

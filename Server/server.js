@@ -8,8 +8,15 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 app.get("/", (req, res) => res.send(messages));
-app.post("/", (req, res) => console.log("got it"));
+app.post("/", (req, res) => {
+  console.log("gott it");
+  console.log(new Date().toString());
+  console.log(req.body);
+});
 
 const PORT = 3000;
 
