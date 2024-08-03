@@ -1,10 +1,12 @@
 import LogIn from "./LogIn.tsx";
 import Board from "./Board.tsx";
 import { useState } from "react";
+import { io } from "socket.io-client";
 
 const App = () => {
   const [username, setUsername] = useState<null | string>(null);
-
+  const URL = "http://localhost:3000";
+  const socket = io(URL);
   const onLogIn = (e: React.FormEvent<HTMLFormElement>) => {
     const target = e.currentTarget;
     const inputValue = (target[0] as HTMLInputElement).value;

@@ -1,23 +1,26 @@
-const express = require("express");
+import express from "express";
+import { Server } from "socket.io";
+import cors from "cors";
 const app = express();
-const cors = require("cors");
-const messages = require("./messages");
 
-const corsOptions = {
-  origin: ["http://localhost:5173"],
-};
+//const corsOptions = {
+//  origin: ["http://localhost:5173"],
+//};
 
-app.use(cors(corsOptions));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
-app.get("/", (req, res) => res.send(messages));
-app.post("/", (req, res) => {
-  console.log("gott it");
-  console.log(new Date().toString());
-  console.log(req.body);
-});
+//app.use(cors(corsOptions));
 
 const PORT = 3000;
 
-app.listen(PORT, () => console.log("Server started on PORT " + PORT));
+const expressServer = app.listen(PORT, () =>
+  console.log("Server started on PORT " + PORT)
+);
+
+const io = new Server(expressServer, {
+  cors: {
+    origin: "http://localhost:5173",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log(`User ${socket.id} connected`);
+});
