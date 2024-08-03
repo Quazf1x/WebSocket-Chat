@@ -23,4 +23,5 @@ const io = new Server(expressServer, {
 
 io.on("connection", (socket) => {
   console.log(`User ${socket.id} connected`);
+  console.log(socket.handshake.auth.username);
 });

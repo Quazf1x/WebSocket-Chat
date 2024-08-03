@@ -6,11 +6,17 @@ import { io } from "socket.io-client";
 const App = () => {
   const [username, setUsername] = useState<null | string>(null);
   const URL = "http://localhost:3000";
-  const socket = io(URL);
+
+  const socket = io(URL, {
+    autoConnect: false,
+  });
+
   const onLogIn = (e: React.FormEvent<HTMLFormElement>) => {
     const target = e.currentTarget;
-    const inputValue = (target[0] as HTMLInputElement).value;
-    setUsername(inputValue);
+    const username = (target[0] as HTMLInputElement).value;
+    setUsername(username);
+    socket.auth = { username };
+    socket.connect();
   };
 
   return (
