@@ -4,7 +4,7 @@ import { useState } from "react";
 import { io } from "socket.io-client";
 
 const App = () => {
-  const [username, setUsername] = useState<null | string>(null);
+  const [username, setUsername] = useState<null | string>("hii");
   const URL = "http://localhost:3000";
 
   const socket = io(URL, {

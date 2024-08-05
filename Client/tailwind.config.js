@@ -3,6 +3,12 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      gridTemplateColumns: {
+        Board: "5fr 1fr",
+      },
+      gridTemplateRows: {
+        Board: "5fr 1fr",
+      },
       backgroundSize: {
         "300%": "300%",
       },
