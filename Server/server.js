@@ -3,12 +3,6 @@ import { Server } from "socket.io";
 import cors from "cors";
 const app = express();
 
-//const corsOptions = {
-//  origin: ["http://localhost:5173"],
-//};
-
-//app.use(cors(corsOptions));
-
 const PORT = 3000;
 
 const expressServer = app.listen(PORT, () =>
@@ -21,7 +15,17 @@ const io = new Server(expressServer, {
   },
 });
 
-io.on("connection", (socket) => {
-  console.log(`User ${socket.id} connected`);
-  console.log(socket.handshake.auth.username);
+const corsOptions = {
+  origin: ["http://localhost:5173"],
+};
+
+app.use(cors(corsOptions));
+
+io.use((socket, next) => {
+  socket.username = socket.handshake.auth.username;
+  console.log(
+    `User id: ${socket.id.toString().substring(0, 4)} Username: ${
+      socket.username
+    } connected`
+  );
 });

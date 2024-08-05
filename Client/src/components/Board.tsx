@@ -12,17 +12,6 @@ type BoardType = {
 const Board = ({ username }: BoardType) => {
   const [data, setData] = useState<null | MessageTypes[]>(null);
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await fetch("http://localhost:3000/");
-
-      const data = await response.json();
-      console.log(data);
-      setData(data);
-    };
-    getData();
-  }, []);
-
   return (
     <div className="flex flex-wrap base-wrapper p-10 w-[clamp(600px,90%,1200px)]">
       <div className="h-5/6 w-5/6 overflow-y-auto">
