@@ -28,4 +28,10 @@ io.use((socket, next) => {
       socket.username
     } connected`
   );
+
+  socket.on("new message", ({ messageData }) => {
+    console.log("1");
+    socket.emit("new message", { messageData });
+  });
+  next();
 });

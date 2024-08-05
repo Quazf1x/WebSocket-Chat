@@ -4,7 +4,7 @@ import { useState } from "react";
 import { io } from "socket.io-client";
 
 const App = () => {
-  const [username, setUsername] = useState<null | string>("hii");
+  const [username, setUsername] = useState<null | string>();
   const URL = "http://localhost:3000";
 
   const socket = io(URL, {
@@ -25,7 +25,11 @@ const App = () => {
     animate-gradbg bg-gradient-to-tr from-violet-500 via-rose-300 to-orange-300
     flex justify-center items-center"
     >
-      {username ? <Board username={username} /> : <LogIn onLogIn={onLogIn} />}
+      {username ? (
+        <Board socket={socket} username={username} />
+      ) : (
+        <LogIn onLogIn={onLogIn} />
+      )}
     </main>
   );
 };

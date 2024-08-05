@@ -1,6 +1,5 @@
 type MessageTypes = {
-  id?: string;
-  added: Date;
+  added: string;
   text: string;
   user: string;
 };

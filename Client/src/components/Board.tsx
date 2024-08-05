@@ -4,21 +4,43 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import { MessageTypes } from "../Utils/Types.ts";
+import { Socket } from "socket.io-client";
+import { format } from "date-fns";
 
 type BoardType = {
+  socket: Socket;
   username: string;
 };
 
-const Board = ({ username }: BoardType) => {
-  const [data, setData] = useState<null | MessageTypes[]>(null);
+const Board = ({ socket, username }: BoardType) => {
+  const [messages, setMessages] = useState<MessageTypes[]>([]);
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const messageData = {
+      added: format(new Date(), "k:m, dd.MM.y"),
+      username: formData.get("username"),
+      userMessage: formData.get("userMessage"),
+    };
+    console.log(messageData);
+    socket.emit("new message", { messageData });
+  };
+
+  useEffect(() => {
+    socket.on("new message", ({ messageData }) => {
+      setMessages([...messages, messageData]);
+    });
+  }, []);
 
   return (
     <div className="flex flex-wrap base-wrapper p-10 w-[clamp(600px,90%,1200px)]">
       <div className="h-5/6 w-5/6 overflow-y-auto">
-        {data ? (
-          data.map((msg) => (
+        {messages ? (
+          messages.map((msg, i) => (
             <Message
-              key={msg.id}
+              key={`${msg.user} msg #${i}`}
               added={msg.added}
               text={msg.text}
               user={msg.user}
@@ -33,7 +55,7 @@ const Board = ({ username }: BoardType) => {
         <Room name="Room 2" />
         <Room name="Room 3" />
       </div>
-      <form className="flex w-5/6 h-1/6 items-center">
+      <form onSubmit={onSubmit} className="flex w-5/6 h-1/6 items-center">
         <input id="username" name="username" value={username} readOnly hidden />
         <textarea
           id="user-message"
