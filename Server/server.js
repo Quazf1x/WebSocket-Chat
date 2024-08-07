@@ -37,6 +37,10 @@ io.on("connection", (socket) => {
     io.emit("message", { messageData });
   });
 
+  socket.on("newConnection", () => {
+    io.emit("newConnection");
+  });
+
   socket.on("disconnect", () => {
     console.log(`User ${socket.username} disconnected`);
   });

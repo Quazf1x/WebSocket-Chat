@@ -22,6 +22,11 @@ const ChatBody = ({ socket }: ChatBodyType) => {
       socket.off("message", handleMessage);
     };
   }, [socket]);
+
+  useEffect(() => {
+    console.log("1");
+    socket.on("newConnection", () => console.log("got new connection"));
+  }, [socket]);
   return (
     <>
       {messages ? (
