@@ -46,6 +46,9 @@ const Board = ({ socket, username }: BoardType) => {
   return (
     <div className="flex flex-wrap base-wrapper p-10 w-[clamp(600px,90%,1200px)]">
       <div className="h-5/6 w-5/6 overflow-y-auto">
+        <h1 className="text-4xl font-semibold mb-7">
+          General Chat, as <span>{username}</span>
+        </h1>
         {messages ? (
           messages.map((msg, i) => (
             <Message
@@ -70,7 +73,7 @@ const Board = ({ socket, username }: BoardType) => {
           id="user-message"
           name="userMessage"
           placeholder="Type here..."
-          className="w-11/12 h-16 mt-4 p-2 text-lg bg-white/30 shadow-md rounded-md resize-none focus:outline-white/25"
+          className="w-11/12 h-20 mt-4 p-2 text-lg bg-white/30 shadow-md rounded-md resize-none focus:outline-white/25"
         />
         <button type="submit" className="text-3xl mt-3 ml-5">
           <FontAwesomeIcon icon={faPaperPlane} />

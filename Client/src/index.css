@@ -9,5 +9,6 @@
 }
 
 .base-wrapper {
-  @apply h-5/6 bg-gray-100/85 rounded-3xl  shadow-xl;
+  height: 95%;
+  @apply bg-gray-100/85 rounded-3xl  shadow-xl;
 }
