@@ -1,5 +1,5 @@
-import LogIn from "./LogIn.tsx";
-import Board from "./Board.tsx";
+import LogIn from "./pages/LogIn.tsx";
+import Board from "./pages/Board.tsx";
 import { useState } from "react";
 import { io } from "socket.io-client";
 
