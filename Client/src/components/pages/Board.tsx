@@ -1,11 +1,7 @@
-import Message from "../reUsables/Message.tsx";
 import Room from "../reUsables/Room.tsx";
-import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
-import { MessageTypes } from "../../Utils/Types.ts";
+import ChatForm from "../elements/ChatForm.tsx";
 import { Socket } from "socket.io-client";
-import { format } from "date-fns";
+import ChatBody from "../elements/ChatBody.tsx";
 
 type BoardType = {
   socket: Socket;
@@ -13,38 +9,8 @@ type BoardType = {
 };
 
 const Board = ({ socket, username }: BoardType) => {
-  const [messages, setMessages] = useState<MessageTypes[]>([]);
-  const [msgContent, setMsgContent] = useState("");
-
   socket.auth = { username };
   socket.connect();
-  socket.emit("newUserConnected");
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
-    const messageData = {
-      added: format(new Date(), "HH:mm, dd.MM.y"),
-      username: formData.get("username"),
-      userMessage: formData.get("userMessage"),
-    };
-    socket.emit("message", { messageData });
-    setMsgContent("");
-  };
-
-  useEffect(() => {
-    const handleMessage = ({ messageData }: { messageData: MessageTypes }) => {
-      setMessages((prevMessages) => [messageData, ...prevMessages]);
-    };
-
-    socket.on("message", handleMessage);
-    console.log("useEffect fired");
-
-    return () => {
-      socket.off("message", handleMessage);
-    };
-  }, [socket]);
 
   return (
     <div className="flex flex-wrap base-wrapper p-10 w-[clamp(600px,90%,1200px)]">
@@ -52,38 +18,14 @@ const Board = ({ socket, username }: BoardType) => {
         <h1 className="text-4xl font-semibold mb-7">
           General Chat, as <span>{username}</span>
         </h1>
-        {messages ? (
-          messages.map((msg, i) => (
-            <Message
-              key={`${msg.username} msg #${i}`}
-              added={msg.added}
-              userMessage={msg.userMessage}
-              username={msg.username}
-            />
-          ))
-        ) : (
-          <></>
-        )}
+        <ChatBody socket={socket} />
       </div>
       <div className="pt-4 pl-2 w-1/6 flex flex-col gap-4">
         <Room name="General Chat" />
         <Room name="Room 2" />
         <Room name="Room 3" />
       </div>
-      <form onSubmit={onSubmit} className="flex w-5/6 h-1/6 items-center">
-        <input id="username" name="username" value={username} readOnly hidden />
-        <textarea
-          id="user-message"
-          name="userMessage"
-          placeholder="Type here..."
-          value={msgContent}
-          onChange={(e) => setMsgContent(e.target.value)}
-          className="w-11/12 h-20 mt-4 p-2 text-lg bg-white/30 shadow-md rounded-md resize-none focus:outline-white/25"
-        />
-        <button type="submit" className="text-3xl mt-3 ml-5">
-          <FontAwesomeIcon icon={faPaperPlane} />
-        </button>
-      </form>
+      <ChatForm socket={socket} username={username} />
     </div>
   );
 };
