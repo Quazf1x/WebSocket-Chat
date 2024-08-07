@@ -1,7 +1,7 @@
 type MessageTypes = {
   added: string;
-  text: string;
-  user: string;
+  userMessage: string;
+  username: string;
 };
 
 export type { MessageTypes };

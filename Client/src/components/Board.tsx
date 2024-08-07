@@ -15,24 +15,33 @@ type BoardType = {
 const Board = ({ socket, username }: BoardType) => {
   const [messages, setMessages] = useState<MessageTypes[]>([]);
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  socket.auth = { username };
+  socket.connect();
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target);
+    const formData = new FormData(e.currentTarget);
     const messageData = {
       added: format(new Date(), "k:m, dd.MM.y"),
       username: formData.get("username"),
       userMessage: formData.get("userMessage"),
     };
-    console.log(messageData);
-    socket.emit("new message", { messageData });
+    socket.emit("message", { messageData });
   };
 
   useEffect(() => {
-    socket.on("new message", ({ messageData }) => {
-      setMessages([...messages, messageData]);
-    });
-  }, []);
+    const handleMessage = ({ messageData }: { messageData: MessageTypes }) => {
+      setMessages((prevMessages) => [messageData, ...prevMessages]);
+    };
+
+    socket.on("message", handleMessage);
+    console.log("useEffect fired");
+
+    return () => {
+      socket.off("message", handleMessage);
+    };
+  }, [socket]);
 
   return (
     <div className="flex flex-wrap base-wrapper p-10 w-[clamp(600px,90%,1200px)]">
@@ -40,17 +49,17 @@ const Board = ({ socket, username }: BoardType) => {
         {messages ? (
           messages.map((msg, i) => (
             <Message
-              key={`${msg.user} msg #${i}`}
+              key={`${msg.username} msg #${i}`}
               added={msg.added}
-              text={msg.text}
-              user={msg.user}
+              userMessage={msg.userMessage}
+              username={msg.username}
             />
           ))
         ) : (
           <></>
         )}
       </div>
-      <div className="w-1/6 border flex flex-col gap-4">
+      <div className="pt-4 pl-2 w-1/6 flex flex-col gap-4">
         <Room name="General Chat" />
         <Room name="Room 2" />
         <Room name="Room 3" />

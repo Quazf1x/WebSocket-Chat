@@ -16,22 +16,32 @@ const io = new Server(expressServer, {
 });
 
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  origin: ["http://localhost:5173", "*"],
 };
 
 app.use(cors(corsOptions));
 
 io.use((socket, next) => {
   socket.username = socket.handshake.auth.username;
+  next();
+});
+
+io.on("connection", (socket) => {
   console.log(
-    `User id: ${socket.id.toString().substring(0, 4)} Username: ${
+    `User id: ${socket.id.substring(0, 4)} Username: ${
       socket.username
     } connected`
   );
-
-  socket.on("new message", ({ messageData }) => {
-    console.log("1");
-    socket.emit("new message", { messageData });
+  socket.on("message", ({ messageData }) => {
+    console.log(messageData);
+    io.emit("message", { messageData });
   });
-  next();
+
+  socket.on("disconnect", () => {
+    console.log(`User ${socket.username} disconnected`);
+  });
+
+  socket.on("connect_error", (error) => {
+    console.error("Connection error:", error);
+  });
 });
