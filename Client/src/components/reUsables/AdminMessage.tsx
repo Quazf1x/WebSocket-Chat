@@ -1,5 +1,9 @@
-const AdminMessage = () => {
-  return <p>This is a sample admin message</p>;
+type AdminMessageTypes = {
+  message: string;
+};
+
+const AdminMessage = ({ message }: AdminMessageTypes) => {
+  return <p>{message}</p>;
 };
 
 export default AdminMessage;

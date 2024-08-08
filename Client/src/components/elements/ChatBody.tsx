@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Message from "../reUsables/Message.tsx";
+import AdminMessage from "../reUsables/AdminMessage.tsx";
 import { MessageTypes } from "../../Utils/Types.ts";
 import { Socket } from "socket.io-client";
 
@@ -12,6 +13,7 @@ const ChatBody = ({ socket }: ChatBodyType) => {
 
   useEffect(() => {
     const handleMessage = ({ messageData }: { messageData: MessageTypes }) => {
+      console.log(messageData);
       setMessages((prevMessages) => [messageData, ...prevMessages]);
     };
 
@@ -24,19 +26,37 @@ const ChatBody = ({ socket }: ChatBodyType) => {
   }, [socket]);
 
   useEffect(() => {
-    console.log("1");
-    socket.on("newConnection", () => console.log("got new connection"));
+    const handleNewConnection = () => {
+      const msg = {
+        added: "string",
+        userMessage: "string",
+        username: "ADMIN",
+      };
+      setMessages((prevMessages) => [msg, ...prevMessages]);
+    };
+
+    socket.on("newConnection", handleNewConnection);
+
+    return () => {
+      socket.off("newConnection", handleNewConnection);
+    };
   }, [socket]);
+
   return (
     <>
       {messages ? (
         messages.map((msg, i) => (
-          <Message
-            key={`${msg.username} msg #${i}`}
-            added={msg.added}
-            userMessage={msg.userMessage}
-            username={msg.username}
-          />
+          <div key={`${msg.username} msg #${i}`}>
+            {msg.username === "ADMIN" ? (
+              <AdminMessage message={msg.userMessage} />
+            ) : (
+              <Message
+                added={msg.added}
+                userMessage={msg.userMessage}
+                username={msg.username}
+              />
+            )}
+          </div>
         ))
       ) : (
         <></>

@@ -11,7 +11,6 @@ type BoardType = {
 const Board = ({ socket, username }: BoardType) => {
   socket.auth = { username };
   socket.connect();
-  socket.emit("newConnection");
 
   return (
     <div className="flex flex-wrap base-wrapper p-10 w-[clamp(600px,90%,1200px)]">

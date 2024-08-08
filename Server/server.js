@@ -32,13 +32,10 @@ io.on("connection", (socket) => {
       socket.username
     } connected`
   );
+  io.emit("newConnection");
   socket.on("message", ({ messageData }) => {
     console.log(messageData);
     io.emit("message", { messageData });
-  });
-
-  socket.on("newConnection", () => {
-    io.emit("newConnection");
   });
 
   socket.on("disconnect", () => {
