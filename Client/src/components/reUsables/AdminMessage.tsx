@@ -3,7 +3,7 @@ type AdminMessageTypes = {
 };
 
 const AdminMessage = ({ message }: AdminMessageTypes) => {
-  return <p>{message}</p>;
+  return <p className="text-center m-5">{message}</p>;
 };
 
 export default AdminMessage;
