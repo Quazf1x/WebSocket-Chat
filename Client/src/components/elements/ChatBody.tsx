@@ -26,13 +26,12 @@ const ChatBody = ({ socket }: ChatBodyType) => {
   }, [socket]);
 
   useEffect(() => {
-    const handleNewConnection = () => {
-      const msg = {
-        added: "string",
-        userMessage: "string",
-        username: "ADMIN",
-      };
-      setMessages((prevMessages) => [msg, ...prevMessages]);
+    const handleNewConnection = ({
+      messageData,
+    }: {
+      messageData: MessageTypes;
+    }) => {
+      setMessages((prevMessages) => [messageData, ...prevMessages]);
     };
 
     socket.on("newConnection", handleNewConnection);

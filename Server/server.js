@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
@@ -32,10 +33,22 @@ io.on("connection", (socket) => {
       socket.username
     } connected`
   );
-  io.emit("newConnection");
+
+  const connectionMessage = buildMessage(
+    new Date(),
+    `${socket.username} has joined the room`,
+    "ADMIN"
+  );
+
+  io.emit("newConnection", { messageData: connectionMessage });
+
   socket.on("message", ({ messageData }) => {
-    console.log(messageData);
-    io.emit("message", { messageData });
+    const formattedMessage = buildMessage(
+      messageData.added,
+      messageData.userMessage,
+      messageData.username
+    );
+    io.emit("message", { messageData: formattedMessage });
   });
 
   socket.on("disconnect", () => {
@@ -46,3 +59,11 @@ io.on("connection", (socket) => {
     console.error("Connection error:", error);
   });
 });
+
+const buildMessage = (date, message, username) => {
+  return {
+    added: format(date, "HH:mm, dd.MM.y"),
+    userMessage: message,
+    username: username,
+  };
+};

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { format } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import { Socket } from "socket.io-client";
@@ -15,11 +14,13 @@ const ChatForm = ({ socket, username }: ChatFormTypes) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
+
     const messageData = {
-      added: format(new Date(), "HH:mm, dd.MM.y"),
+      added: new Date(),
       username: formData.get("username"),
       userMessage: formData.get("userMessage"),
     };
+
     socket.emit("message", { messageData });
     setMsgContent("");
   };
