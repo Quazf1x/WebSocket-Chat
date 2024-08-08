@@ -5,10 +5,9 @@ import { Socket } from "socket.io-client";
 
 type ChatFormTypes = {
   socket: Socket;
-  username: string;
 };
 
-const ChatForm = ({ socket, username }: ChatFormTypes) => {
+const ChatForm = ({ socket }: ChatFormTypes) => {
   const [msgContent, setMsgContent] = useState("");
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,7 +16,6 @@ const ChatForm = ({ socket, username }: ChatFormTypes) => {
 
     const messageData = {
       added: new Date(),
-      username: formData.get("username"),
       userMessage: formData.get("userMessage"),
     };
 
@@ -27,7 +25,6 @@ const ChatForm = ({ socket, username }: ChatFormTypes) => {
 
   return (
     <form onSubmit={onSubmit} className="flex w-5/6 h-1/6 items-center">
-      <input id="username" name="username" value={username} readOnly hidden />
       <textarea
         id="user-message"
         name="userMessage"

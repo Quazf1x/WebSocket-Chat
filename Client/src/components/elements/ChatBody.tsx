@@ -12,20 +12,13 @@ const ChatBody = ({ socket }: ChatBodyType) => {
   const [messages, setMessages] = useState<MessageTypes[]>([]);
 
   useEffect(() => {
+    console.log("useEffect fired");
+
     const handleMessage = ({ messageData }: { messageData: MessageTypes }) => {
       console.log(messageData);
       setMessages((prevMessages) => [messageData, ...prevMessages]);
     };
 
-    socket.on("message", handleMessage);
-    console.log("useEffect fired");
-
-    return () => {
-      socket.off("message", handleMessage);
-    };
-  }, [socket]);
-
-  useEffect(() => {
     const handleNewConnection = ({
       messageData,
     }: {
@@ -34,10 +27,22 @@ const ChatBody = ({ socket }: ChatBodyType) => {
       setMessages((prevMessages) => [messageData, ...prevMessages]);
     };
 
+    const handleDisconnection = ({
+      messageData,
+    }: {
+      messageData: MessageTypes;
+    }) => {
+      setMessages((prevMessages) => [messageData, ...prevMessages]);
+    };
+
+    socket.on("message", handleMessage);
     socket.on("newConnection", handleNewConnection);
+    socket.on("userDisconnected", handleDisconnection);
 
     return () => {
+      socket.off("message", handleMessage);
       socket.off("newConnection", handleNewConnection);
+      socket.off("userDisconnected", handleDisconnection);
     };
   }, [socket]);
 

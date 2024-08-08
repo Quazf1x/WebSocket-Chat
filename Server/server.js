@@ -46,13 +46,16 @@ io.on("connection", (socket) => {
     const formattedMessage = buildMessage(
       messageData.added,
       messageData.userMessage,
-      messageData.username
+      socket.username
     );
     io.emit("message", { messageData: formattedMessage });
   });
 
   socket.on("disconnect", () => {
-    console.log(`User ${socket.username} disconnected`);
+    const message = `User ${socket.username} has left the room`;
+    console.log(message);
+    const formattedMessage = buildMessage(new Date(), message, "ADMIN");
+    io.emit("userDisconnected", { messageData: formattedMessage });
   });
 
   socket.on("connect_error", (error) => {

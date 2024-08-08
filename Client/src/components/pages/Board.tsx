@@ -25,7 +25,7 @@ const Board = ({ socket, username }: BoardType) => {
         <Room name="Room 2" />
         <Room name="Room 3" />
       </div>
-      <ChatForm socket={socket} username={username} />
+      <ChatForm socket={socket} />
     </div>
   );
 };
