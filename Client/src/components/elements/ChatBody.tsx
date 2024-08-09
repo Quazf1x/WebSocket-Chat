@@ -19,6 +19,11 @@ const ChatBody = ({ socket }: ChatBodyType) => {
       setMessages((prevMessages) => [messageData, ...prevMessages]);
     };
 
+    const handleRoomChange = () => {
+      console.log("room changed");
+      setMessages([]);
+    };
+
     const handleNewConnection = ({
       messageData,
     }: {
@@ -36,11 +41,13 @@ const ChatBody = ({ socket }: ChatBodyType) => {
     };
 
     socket.on("message", handleMessage);
+    socket.on("roomChange", handleRoomChange);
     socket.on("newConnection", handleNewConnection);
     socket.on("userDisconnected", handleDisconnection);
 
     return () => {
       socket.off("message", handleMessage);
+      socket.off("roomChange", handleRoomChange);
       socket.off("newConnection", handleNewConnection);
       socket.off("userDisconnected", handleDisconnection);
     };

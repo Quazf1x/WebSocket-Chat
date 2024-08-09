@@ -8,4 +8,9 @@ type AdminMessageTypes = {
   message: string;
 };
 
-export type { MessageTypes, AdminMessageTypes };
+type RoomTypes = {
+  name: string;
+  id: string;
+};
+
+export type { MessageTypes, AdminMessageTypes, RoomTypes };

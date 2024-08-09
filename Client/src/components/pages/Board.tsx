@@ -20,7 +20,7 @@ const Board = ({ socket, username }: BoardType) => {
         </h1>
         <ChatBody socket={socket} />
       </div>
-      <RoomsBody />
+      <RoomsBody socket={socket} />
 
       <ChatForm socket={socket} />
     </div>

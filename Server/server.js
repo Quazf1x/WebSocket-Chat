@@ -56,6 +56,13 @@ io.on("connection", (socket) => {
     io.emit("message", { messageData: formattedMessage });
   });
 
+  socket.on("roomChange", ({ roomId }) => {
+    console.log("room changed to " + roomId);
+
+    socket.join(roomId);
+    socket.emit("roomChange");
+  });
+
   socket.on("disconnect", () => {
     const message = `User ${socket.username} has left the room`;
     console.log(message);
