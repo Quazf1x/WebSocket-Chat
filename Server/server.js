@@ -2,6 +2,9 @@ import { format } from "date-fns";
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
+
+import rooms from "./rooms.js";
+
 const app = express();
 
 const PORT = 3000;
@@ -21,6 +24,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+app.get("/", (req, res) => res.send(rooms));
 
 io.use((socket, next) => {
   socket.username = socket.handshake.auth.username;
