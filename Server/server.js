@@ -38,6 +38,7 @@ io.on("connection", (socket) => {
       socket.username
     } connected`
   );
+  socket.join(rooms[0].id);
 
   const connectionMessage = buildMessage(
     new Date(),
@@ -59,6 +60,9 @@ io.on("connection", (socket) => {
   socket.on("roomChange", ({ roomId }) => {
     console.log("room changed to " + roomId);
 
+    socket.rooms.forEach((room) => {
+      socket.leave(room);
+    });
     socket.join(roomId);
     socket.emit("roomChange");
   });
