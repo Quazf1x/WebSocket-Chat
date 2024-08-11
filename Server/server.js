@@ -27,6 +27,13 @@ app.use(cors(corsOptions));
 
 app.get("/", (req, res) => res.send(rooms));
 
+const userState = {
+  users: [],
+  setUsers: function (newUserArr) {
+    this.users = newUserArr;
+  },
+};
+
 io.use((socket, next) => {
   socket.username = socket.handshake.auth.username;
   next();
@@ -39,6 +46,8 @@ io.on("connection", (socket) => {
     } connected`
   );
   socket.join(rooms[0].id);
+
+  setUser(socket.id, socket.username, Array.from(socket.rooms)[1]);
 
   const connectionMessage = buildMessage(
     new Date(),
@@ -54,22 +63,27 @@ io.on("connection", (socket) => {
       messageData.userMessage,
       socket.username
     );
-    io.emit("message", { messageData: formattedMessage });
+    const user = findUser(socket.id);
+    io.in(user.room).emit("message", { messageData: formattedMessage });
   });
 
   socket.on("roomChange", ({ roomId }) => {
-    console.log("room changed to " + roomId);
+    const user = findUser(socket.id);
+    const prevRoom = user.room;
+    socket.leave(prevRoom);
 
-    socket.rooms.forEach((room) => {
-      socket.leave(room);
-    });
     socket.join(roomId);
+    setUser(user.id, user.name, roomId);
+
     socket.emit("roomChange");
   });
 
   socket.on("disconnect", () => {
-    const message = `User ${socket.username} has left the room`;
+    const message = `User ${socket.username} disconnected`;
+    removeUser(socket.id);
+
     console.log(message);
+
     const formattedMessage = buildMessage(new Date(), message, "ADMIN");
     io.emit("userDisconnected", { messageData: formattedMessage });
   });
@@ -85,4 +99,21 @@ const buildMessage = (date, message, username) => {
     userMessage: message,
     username: username,
   };
+};
+
+const setUser = (id, name, room) => {
+  const newUser = { id, name, room };
+  userState.setUsers([
+    ...userState.users.filter((newUser) => newUser.id !== id),
+    newUser,
+  ]);
+  return newUser;
+};
+
+const findUser = (id) => {
+  return userState.users.find((user) => user.id === id);
+};
+
+const removeUser = (id) => {
+  return userState.setUsers(userState.users.filter((user) => user.id !== id));
 };
