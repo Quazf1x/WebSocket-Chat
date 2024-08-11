@@ -5,13 +5,17 @@ import { Socket } from "socket.io-client";
 
 type RoomsBodyTypes = {
   socket: Socket;
+  roomNameSetter: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const RoomsBody = ({ socket }: RoomsBodyTypes) => {
+const RoomsBody = ({ socket, roomNameSetter }: RoomsBodyTypes) => {
   const [rooms, setRooms] = useState<RoomTypes[] | null>(null);
 
   const onRoomChange = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const roomId = e.currentTarget.dataset.roomid;
+    const roomName = e.currentTarget.textContent;
+    roomName ? roomNameSetter(roomName) : roomNameSetter("Undefined room");
+
     socket.emit("roomChange", { roomId });
   };
 
