@@ -45,8 +45,10 @@ io.on("connection", (socket) => {
       socket.username
     } connected`
   );
+  //Join the pre-made room from server
   socket.join(rooms[0].id);
 
+  //Add user and their data to list of all users
   setUser(socket.id, socket.username, Array.from(socket.rooms)[1]);
 
   const connectionMessage = buildMessage(
@@ -69,10 +71,33 @@ io.on("connection", (socket) => {
 
   socket.on("roomChange", ({ roomId }) => {
     const user = findUser(socket.id);
+
+    const formattedJoinMessage = buildMessage(
+      new Date(),
+      `${user.name} joined the chatroom`,
+      "ADMIN"
+    );
+
+    const formattedLeaveMessage = buildMessage(
+      new Date(),
+      `${user.name} has left to another chatroom`,
+      "ADMIN"
+    );
+
+    //Handle prev room leaving
     const prevRoom = user.room;
     socket.leave(prevRoom);
 
+    io.to(prevRoom).emit("userDisconnected", {
+      messageData: formattedLeaveMessage,
+    });
+
+    //Handle new room joining
     socket.join(roomId);
+
+    io.to(roomId).emit("newConnection", {
+      messageData: formattedJoinMessage,
+    });
     setUser(user.id, user.name, roomId);
 
     socket.emit("roomChange");
@@ -80,6 +105,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     const message = `User ${socket.username} disconnected`;
+    //remove user from user list
     removeUser(socket.id);
 
     console.log(message);
