@@ -6,22 +6,42 @@ import { Socket } from "socket.io-client";
 
 type ChatBodyType = {
   socket: Socket;
+  username: string;
+  roomName: string;
 };
 
-const ChatBody = ({ socket }: ChatBodyType) => {
+const ChatBody = ({ socket, username, roomName }: ChatBodyType) => {
   const [messages, setMessages] = useState<MessageTypes[]>([]);
+
+  const getLocalStorageKey = () => `messages_${username}_${roomName}`;
+
+  const saveMessagesToLocalStorage = (messages: MessageTypes[]) => {
+    const key = getLocalStorageKey();
+    localStorage.setItem(key, JSON.stringify(messages));
+  };
+
+  const loadMessagesFromLocalStorage = () => {
+    const key = getLocalStorageKey();
+    const savedMessages = localStorage.getItem(key);
+    return savedMessages ? JSON.parse(savedMessages) : [];
+  };
 
   useEffect(() => {
     console.log("useEffect fired");
+    const initialMessages = loadMessagesFromLocalStorage();
+    setMessages(initialMessages);
 
     const handleMessage = ({ messageData }: { messageData: MessageTypes }) => {
-      console.log(messageData);
-      setMessages((prevMessages) => [messageData, ...prevMessages]);
+      setMessages((prevMessages) => {
+        const updatedMessages = [messageData, ...prevMessages];
+        saveMessagesToLocalStorage(updatedMessages);
+        return updatedMessages;
+      });
     };
 
     const handleRoomChange = () => {
       console.log("room changed");
-      setMessages([]);
+      setMessages(loadMessagesFromLocalStorage());
     };
 
     const handleNewConnection = ({
@@ -51,7 +71,7 @@ const ChatBody = ({ socket }: ChatBodyType) => {
       socket.off("newConnection", handleNewConnection);
       socket.off("userDisconnected", handleDisconnection);
     };
-  }, [socket]);
+  }, [socket, username, roomName]);
 
   return (
     <>

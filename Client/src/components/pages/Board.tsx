@@ -20,7 +20,7 @@ const Board = ({ socket, username }: BoardType) => {
         <h1 className="text-4xl font-semibold mb-7">
           {roomName}, as <span>{username}</span>
         </h1>
-        <ChatBody socket={socket} />
+        <ChatBody username={username} roomName={roomName} socket={socket} />
       </div>
       <RoomsBody roomNameSetter={setRoomName} socket={socket} />
 
