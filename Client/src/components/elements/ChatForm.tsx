@@ -34,7 +34,10 @@ const ChatForm = ({ socket }: ChatFormTypes) => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex w-4/6 h-1/6 items-center">
+    <form
+      onSubmit={onSubmit}
+      className="flex pb-10 md:pb-0 pr-10 md:pr-0 md:w-4/6 h-1/6 items-center"
+    >
       <textarea
         required
         id="user-message"

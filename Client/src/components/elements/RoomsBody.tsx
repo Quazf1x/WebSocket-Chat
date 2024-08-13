@@ -31,7 +31,7 @@ const RoomsBody = ({ socket, roomNameSetter }: RoomsBodyTypes) => {
   }, []);
 
   return (
-    <div className="overflow-y-auto h-5/6 p-10 pt-4 w-2/6 flex flex-col gap-4">
+    <>
       {rooms ? (
         rooms.map((room) => (
           <Room
@@ -44,7 +44,7 @@ const RoomsBody = ({ socket, roomNameSetter }: RoomsBodyTypes) => {
       ) : (
         <></>
       )}
-    </div>
+    </>
   );
 };
 
