@@ -10,5 +10,5 @@
 
 .base-wrapper {
   height: 95%;
-  @apply bg-gray-100/85 rounded-3xl border-4 border-white  shadow-xl;
+  @apply bg-gray-100/70 rounded-3xl border-2 border-white  shadow-xl;
 }
