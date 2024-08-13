@@ -88,14 +88,14 @@ io.on("connection", (socket) => {
     const prevRoom = user.room;
     socket.leave(prevRoom);
 
-    io.to(prevRoom).emit("userDisconnected", {
+    socket.broadcast.to(prevRoom).emit("userDisconnected", {
       messageData: formattedLeaveMessage,
     });
 
     //Handle new room joining
     socket.join(roomId);
 
-    io.to(roomId).emit("newConnection", {
+    socket.broadcast.to(roomId).emit("newConnection", {
       messageData: formattedJoinMessage,
     });
     setUser(user.id, user.name, roomId);

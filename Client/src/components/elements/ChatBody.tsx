@@ -10,6 +10,11 @@ type ChatBodyType = {
   roomName: string;
 };
 
+type updateMessageStateTypes = {
+  messageData: MessageTypes;
+  prevMessages: MessageTypes[];
+};
+
 const ChatBody = ({ socket, username, roomName }: ChatBodyType) => {
   const [messages, setMessages] = useState<MessageTypes[]>([]);
 
@@ -26,17 +31,24 @@ const ChatBody = ({ socket, username, roomName }: ChatBodyType) => {
     return savedMessages ? JSON.parse(savedMessages) : [];
   };
 
+  const updateMessageState = ({
+    messageData,
+    prevMessages,
+  }: updateMessageStateTypes) => {
+    const updatedMessages = [messageData, ...prevMessages];
+    saveMessagesToLocalStorage(updatedMessages);
+    return updatedMessages;
+  };
+
   useEffect(() => {
     console.log("useEffect fired");
     const initialMessages = loadMessagesFromLocalStorage();
     setMessages(initialMessages);
 
     const handleMessage = ({ messageData }: { messageData: MessageTypes }) => {
-      setMessages((prevMessages) => {
-        const updatedMessages = [messageData, ...prevMessages];
-        saveMessagesToLocalStorage(updatedMessages);
-        return updatedMessages;
-      });
+      setMessages((prevMessages) =>
+        updateMessageState({ messageData, prevMessages })
+      );
     };
 
     const handleRoomChange = () => {
@@ -49,7 +61,9 @@ const ChatBody = ({ socket, username, roomName }: ChatBodyType) => {
     }: {
       messageData: MessageTypes;
     }) => {
-      setMessages((prevMessages) => [messageData, ...prevMessages]);
+      setMessages((prevMessages) =>
+        updateMessageState({ messageData, prevMessages })
+      );
     };
 
     const handleDisconnection = ({
@@ -57,7 +71,9 @@ const ChatBody = ({ socket, username, roomName }: ChatBodyType) => {
     }: {
       messageData: MessageTypes;
     }) => {
-      setMessages((prevMessages) => [messageData, ...prevMessages]);
+      setMessages((prevMessages) =>
+        updateMessageState({ messageData, prevMessages })
+      );
     };
 
     socket.on("message", handleMessage);
