@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
+import "dotenv/config";
 
 import rooms from "./rooms.js";
 
@@ -15,15 +16,16 @@ const expressServer = app.listen(PORT, () =>
 
 const io = new Server(expressServer, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.NODE_ENV === "dev" ? "http://localhost:5173" : false,
   },
 });
+if (process.env.NODE_ENV === "dev") {
+  const corsOptions = {
+    origin: ["http://localhost:5173", "*"],
+  };
 
-const corsOptions = {
-  origin: ["http://localhost:5173", "*"],
-};
-
-app.use(cors(corsOptions));
+  app.use(cors(corsOptions));
+}
 
 app.get("/", (req, res) => res.send(rooms));
 
