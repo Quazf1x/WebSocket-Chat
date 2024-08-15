@@ -25,7 +25,6 @@ const RoomsBody = ({ socket, roomNameSetter }: RoomsBodyTypes) => {
       console.log(fetchURL);
       if (!fetchURL) throw new Error(`Invalid URL: ${fetchURL}`);
       const response = await fetch(fetchURL);
-
       const data = await response.json();
       console.log(data);
       setRooms(data);
