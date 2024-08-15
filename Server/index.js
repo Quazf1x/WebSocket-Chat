@@ -1,22 +1,20 @@
 import { format } from "date-fns";
 import express from "express";
 import { Server } from "socket.io";
+import { createServer } from "http";
 import cors from "cors";
 import "dotenv/config";
 
 import rooms from "./rooms.js";
 
 const app = express();
+const httpServer = createServer(app);
 
 const PORT = 3000;
 
-const expressServer = app.listen(PORT, () =>
-  console.log("Server started on PORT " + PORT)
-);
-
-const io = new Server(expressServer, {
+const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONT_URL,
+    origin: process.env == "prod" ? false : process.env.FRONT_URL,
   },
 });
 
@@ -144,3 +142,5 @@ const findUser = (id) => {
 const removeUser = (id) => {
   return userState.setUsers(userState.users.filter((user) => user.id !== id));
 };
+
+httpServer.listen(PORT);
