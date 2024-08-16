@@ -5,9 +5,9 @@ import { io } from "socket.io-client";
 
 const App = () => {
   const [username, setUsername] = useState<null | string>();
-  const URL = "http://localhost:3000";
+  const URL = process.env.VITE_BACKEND_URL;
 
-  const socket = io(URL, {
+  const socket = io(URL ? URL : "", {
     autoConnect: false,
   });
 
