@@ -2,7 +2,7 @@ import ChatForm from "../elements/ChatForm.tsx";
 import ChatBody from "../elements/ChatBody.tsx";
 import RoomsBody from "../elements/RoomsBody.tsx";
 import { Socket } from "socket.io-client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type BoardType = {
   socket: Socket;
@@ -13,6 +13,24 @@ const Board = ({ socket, username }: BoardType) => {
   const [roomName, setRoomName] = useState("General Chat");
   socket.auth = { username };
   socket.connect();
+
+  useEffect(() => {
+    const handleConnectionErr = (err: any) => {
+      // the reason of the error, for example "xhr poll error"
+      console.log(err.message);
+
+      // some additional description, for example the status code of the initial HTTP response
+      console.log(err.description);
+
+      // some additional context, for example the XMLHttpRequest object
+      console.log(err.context);
+    };
+
+    socket.on("connect_error", (err) => handleConnectionErr(err));
+    return () => {
+      socket.off("connect_error", (err) => handleConnectionErr(err));
+    };
+  }, [socket]);
 
   return (
     <div className="flex md:flex-wrap flex-col md:flex-row base-wrapper p-10 pr-2 w-full m-2 md:m-0 md:w-[clamp(600px,90%,1200px)]">
