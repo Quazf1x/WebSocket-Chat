@@ -10,7 +10,7 @@ import rooms from "./rooms.js";
 const app = express();
 const httpServer = createServer(app);
 
-const PORT = 3000;
+const PORT = process.env.PORT || "3000";
 
 const io = new Server(httpServer, {
   cors: {
