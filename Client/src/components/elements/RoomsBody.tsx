@@ -21,9 +21,7 @@ const RoomsBody = ({ socket, roomNameSetter }: RoomsBodyTypes) => {
 
   useEffect(() => {
     const getData = async () => {
-      const fetchURL = `${import.meta.env.VITE_BACKEND_URL}:${
-        import.meta.env.VITE_PORT
-      }`;
+      const fetchURL = import.meta.env.VITE_BACKEND_URL;
       console.log(fetchURL);
       if (!fetchURL) throw new Error(`Invalid URL: ${fetchURL}`);
       const response = await fetch(fetchURL);

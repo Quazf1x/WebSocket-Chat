@@ -5,8 +5,9 @@ import { io } from "socket.io-client";
 
 const App = () => {
   const [username, setUsername] = useState<null | string>();
-  const PORT = import.meta.env.VITE_PORT || "3000";
-  const socket = io(`${import.meta.env.VITE_BACKEND_URL}:${PORT}`, {
+  const PORT = process.env.PORT || "3000";
+
+  const socket = io(`${process.env.VITE_BACKEND_URL}:${PORT}`, {
     autoConnect: false,
   });
 
